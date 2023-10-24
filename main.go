@@ -11,7 +11,7 @@ import (
 )
 
 const StorageFileName = "Storage.xlsx"
-const sheetName = "Sheet1"
+const SheetName = "Sheet1"
 
 type Agency struct {
 	ID             int
@@ -34,7 +34,7 @@ func main() {
 
 	fmt.Println("Please enter the command: ")
 	scanner.Scan()
-	command = scanner.Text()
+	command = strings.ToLower(scanner.Text())
 
 	switch command {
 	case "get":
@@ -47,6 +47,8 @@ func main() {
 		updateAgency()
 	case "status":
 		getStatus()
+	default:
+		fmt.Println("Command is invalid, please try again. Available commands [get, create, list, update, status]")
 	}
 }
 
@@ -85,7 +87,7 @@ func addToDataStorage(answers []interface{}) {
 	for colIdx, cellValue := range answers {
 		colName := ToAlphaString(colIdx)
 		cellRef := colName + fmt.Sprint(newRowIndex)
-		f.SetCellValue(sheetName, cellRef, cellValue)
+		f.SetCellValue(SheetName, cellRef, cellValue)
 	}
 
 	if err := f.SaveAs(StorageFileName); err != nil {
@@ -99,7 +101,7 @@ func getDataStorage() ([][]string, error) {
 		f = excelize.NewFile()
 	}
 
-	rows, err := f.GetRows(sheetName)
+	rows, err := f.GetRows(SheetName)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
